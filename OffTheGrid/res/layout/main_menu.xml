@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<item android:id="@+id/generate_grid"
+    	android:icon="@drawable/ic_menu_add"
+		android:title="Capture or Generate" />
+          
+	<item android:id="@+id/email_grid"
+		android:icon="@drawable/ic_menu_send"
+		android:title="Email" />
+          
+	<item android:id="@+id/settings"
+		android:icon="@drawable/ic_menu_preferences"
+		android:title="Settings" />
+	
+	<item android:id="@+id/view_grid"
+		android:icon="@drawable/ic_menu_view"
+		android:title="View Grid"
+		/>
+	
+		
+</menu>

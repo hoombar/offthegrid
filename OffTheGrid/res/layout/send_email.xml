@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+	android:background="@drawable/background"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    >
+
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+	    android:layout_height="48dp"
+    	android:layout_marginTop="10dp"
+	   	>
+	    
+	    <ImageView
+	        android:id="@+id/mail_icon"
+	        android:layout_width="48dp"
+	        android:layout_height="fill_parent"
+	        
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentBottom="true"
+	        android:layout_marginRight="6dip"
+	        
+	        android:src="@drawable/mail_find" />
+
+	    <TextView
+	       	android:layout_width="fill_parent"
+	    	android:layout_height="fill_parent" 
+	        android:text="Backup your grid"
+	        style="@android:style/TextAppearance.Large"
+	        
+	        android:layout_toRightOf="@id/mail_icon"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	
+	        android:gravity="center_vertical"
+	        />
+	
+	</RelativeLayout>
+    
+     <LinearLayout 
+   		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    android:layout_marginTop="10dp"
+		    android:paddingBottom="10dp"
+         >
+         
+		<TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="left"
+	        android:text="This will allow you to send an email to yourself containing the grid that has been generated for you. A QR code will be attached to the email so that you can scan the grid back in to your phone easily."
+	         />
+	
+	    <LinearLayout
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:orientation="vertical"
+		    android:layout_marginTop="20dp"
+	        >
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:gravity="left"
+		        android:text="To ensure that the grid is sent to you securely, it's placed in an encrypted zip file. You will need to enter the password set below when you want to unlock this zip file from your email inbox."
+	            />
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:gravity="left"
+		        android:layout_marginTop="20dp"
+		        android:text="Passwords must be at least 8 characters long"
+	            />
+	        
+	        
+	        
+	        <TextView
+	            android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:gravity="left"
+		        android:layout_marginTop="20dp"
+		        android:text="Enter password for the zip file:"
+	            />
+	        
+		    <EditText
+		        android:id="@+id/txtPassword"
+		         android:layout_width="fill_parent"
+		         android:layout_height="wrap_content"
+		        />
+		    
+		    <Button
+		        android:id="@+id/btnSendEmail" 
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_gravity="center"
+		        android:layout_margin="10dp"
+		        android:text="Send email"
+		        android:state_enabled="false"
+		        />
+		        
+	    </LinearLayout>
+         
+     </LinearLayout>
+    
+    
+
+</LinearLayout>

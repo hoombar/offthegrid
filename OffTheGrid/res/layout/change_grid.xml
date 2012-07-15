@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+	android:background="@drawable/background"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    >
+    
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+	    android:layout_height="48dp"
+	   	>
+	    
+	    <ImageView
+	        android:id="@+id/plus_icon"
+	        android:layout_width="48dp"
+	        android:layout_height="fill_parent"
+	        
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentBottom="true"
+	        android:layout_marginRight="6dip"
+	        
+	        android:src="@drawable/plus" />
+	    
+	    <TextView
+	       	android:layout_width="fill_parent"
+	    	android:layout_height="fill_parent" 
+	        android:text="Create a grid"
+	        style="@android:style/TextAppearance.Large"
+	        
+	        android:layout_toRightOf="@id/plus_icon"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	
+	        android:gravity="center_vertical"
+	        />
+	
+	</RelativeLayout>
+    
+    <TextView
+       	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content" 
+    	android:gravity="left"
+        android:text="If you haven't already created a grid, or if you wish to start fresh and generate a brand new grid, you should use the option 'Generate new grid'"
+        android:layout_marginBottom="10dp"
+        />
+    
+    <Button
+    	android:id="@+id/btnGenerateGrid"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_gravity="center_horizontal" 
+    	android:text="Generate new grid"
+    />
+
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+	    android:layout_height="48dp"
+	 	android:layout_marginTop="10dp"
+	   	>
+	    
+	    <ImageView
+	        android:id="@+id/camera_icon"
+	        android:layout_width="48dp"
+	        android:layout_height="fill_parent"
+	        
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentBottom="true"
+	        android:layout_marginRight="6dip"
+	        
+	        android:src="@drawable/digital_camera" />
+
+		<TextView
+		   	android:layout_width="wrap_content"
+		 	android:layout_height="fill_parent" 
+		 	android:layout_gravity="left"
+		    android:text="Already have one?"
+		    style="@android:style/TextAppearance.Large"
+
+	        android:layout_toRightOf="@id/camera_icon"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	
+	        android:gravity="center_vertical"
+		    />
+	    	    
+	</RelativeLayout>
+    
+    <TextView
+       	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content" 
+    	android:gravity="left"
+        android:text="If you have already created a grid and sent it to yourself, you can use the 'Capture Grid' option to scan the QR code below your grid. This will put the grid you printed out back on to your device"
+        android:layout_marginBottom="10dp"
+        />
+        
+    <Button
+    	android:id="@+id/btnCaptureGrid"
+    	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_gravity="center_horizontal" 
+    	android:text="Capture Grid"
+    />
+    
+    <TextView
+       	android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:layout_gravity="center_horizontal" 
+    	android:gravity="center"
+    	android:textStyle="bold"
+        android:text="** WARNING: both options will override any grid you may have saved on your device! **"
+        android:layout_marginTop="15dp"
+        />    
+
+</LinearLayout>

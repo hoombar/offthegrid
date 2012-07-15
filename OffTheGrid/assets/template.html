@@ -1,0 +1,141 @@
+<html>
+	<head>
+		<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+		<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+		<META HTTP-EQUIV="Expires" CONTENT="-1">
+		
+		<style>
+			body { font-family: tahoma,geneva,sans-serif; }
+			h1 { font-size: x-large; }
+			h2 { font-size: large; }
+			table {
+				cellspacing: 0;
+				cellpadding: 0;
+			}
+			td {
+				width: 1.5em;
+				line-height: 120%;
+				font-size: 11pt;
+				text-align: center;
+			}
+			.bg-shaded { background: none repeat scroll 0 0 #ccccdd; }
+			.fg-light { color: #888888; }
+			.fg-dark { color: #0000AA; }
+			.border-bottom-light { border-bottom: 1px solid #005500; }
+			.border-bottom-dark { border-bottom: 1px solid #2e406b; }
+			.border-right-light { border-right: 1px solid #005500; }
+			.border-left-light { border-left: 1px solid #005500; }
+			.border-top-light { border-top: 1px solid #005500; }
+		</style>
+	</head>
+	<body>
+		<h1>Your grid</h1>
+		Keep your grid below in a safe, secure place. Remember, if anyone has access to your grid they can work out what your passwords are!
+		<p align="center">
+			[GRID]
+		</p>
+		<p align="center">
+			<br />
+			Scan the QR code below using "Off the Grid" to get the above grid back in to your phone app.
+			<br />
+			<img src="data:image/png;base64,[QR_IMAGE_DATA]" />
+		</p>
+		
+		<div style="page-break-before: always;">
+			
+			<h1>Phase 1</h1>
+			This will give you your starting position.
+			
+			<h2>Directions</h2>
+			Right > Down > Right > Up > (repeat)
+			
+			<h2>Strategy</h2>
+			Start at column 1, row 1.
+			Scan in the current direction until you reach the next letter in sequence. Once you reach the letter, change to the next direction and seek the next letter.
+			
+			<h2>Example</h2>
+			Using the example "amazon"
+			<pre>
+			Scan 	<strong>right</strong> 	to 	<strong>A</strong>
+			Scan 	<strong>down</strong> 	to 	<strong>M</strong>
+			Scan 	<strong>right</strong> 	to 	<strong>A</strong>
+			Scan 	<strong>up</strong> 	to 	<strong>Z</strong>
+			Scan 	<strong>right</strong> 	to 	<strong>O</strong>
+			Scan 	<strong>down</strong> 	to 	<strong>N</strong>
+			</pre>
+		</div>
+		
+		<div style="page-break-before: always;">
+			
+			<h1>Phase 2</h1>
+			This will allow you to retrieve your password (following phase 1)
+			
+			<h2>Directions</h2>
+			Left > Up > Left > Down > Right > Down > (repeat)
+			
+			<h2>Strategy</h2>
+			Scan in the current direction until you reach the next letter in sequence. Once you reach the letter, "overshoot" by two characters and write those characters down.
+			From the position you end up in, change to the next direction and seek the next character in squence.
+			<br /><br />
+			Once you have found each of the sets of two characters, combine them in to one long string to get your password!
+			
+			<h2>What if?</h2>
+			<strong>If the last character of  "overshoot" characters happens to be the next character you are seeking</strong>, simply move one further square in the direction you are currently moving before switching direction and seeking the next character.
+			<br /><br />
+			<strong>If you are seeking in a direction and you reach the end of the grid</strong>, just wrap around and continue in the same direction from the other end of the grid.
+			
+			<h2>Example</h2>
+			Using the example "amazon"
+			<pre>
+			Scan 	<strong>left</strong> 	to	<strong>A</strong>	take next two characters (e.g.) <strong>Fe</strong>
+			Scan 	<strong>up</strong> 	to	<strong>M</strong>	take next two characters (e.g.) <strong>vf</strong>
+			Scan 	<strong>left</strong> 	to	<strong>A</strong>	take next two characters (e.g.) <strong>Gw</strong>
+			Scan 	<strong>down</strong> 	to	<strong>Z</strong>	take next two characters (e.g.) <strong>zO</strong>
+			<strong>*Note: we finish on O, so move down one more row before seeking right to O</strong>
+			Scan 	<strong>right</strong> 	to	<strong>O</strong>	take next two characters (e.g.) <strong>QG</strong>
+			Scan 	<strong>down</strong> 	to	<strong>N</strong>	take next two characters (e.g.) <strong>kP</strong>
+			</pre>
+			
+			Combined in to one long string: FevfGwzOQGkP
+		</div>
+		
+		<div style="page-break-before: always;">
+			<h1>Extras</h1>
+			
+			<h2>Padding</h2>
+			If you have used the extra option for padding, during phase 2, in addition to the two characters you write down, you should also write down the non-alphabetic character that appears in the outer border of the grid (by continuing in the same direction)
+			
+			<h2>Example</h2>
+			Using the example "amazon"
+			<pre>
+			Scan 	<strong>left</strong> 	to	<strong>A</strong>	take next two characters (e.g.) <strong>Fe</strong>	and outer character	<strong>]</strong>
+			Scan 	<strong>up</strong> 	to	<strong>M</strong>	take next two characters (e.g.) <strong>vf</strong>	and outer character	<strong>4</strong>
+			Scan 	<strong>left</strong> 	to	<strong>A</strong>	take next two characters (e.g.) <strong>Gw</strong>	and outer character	<strong>8</strong>
+			Scan 	<strong>down</strong> 	to	<strong>Z</strong>	take next two characters (e.g.) <strong>nG</strong>	and outer character	<strong>+</strong>
+			Scan 	<strong>right</strong> 	to	<strong>O</strong>	take next two characters (e.g.) <strong>QZ</strong>	and outer character	<strong>2</strong>
+			Scan 	<strong>down</strong> 	to	<strong>N</strong>	take next two characters (e.g.) <strong>kP</strong>	and outer character	<strong>;</strong>
+			</pre>
+			
+			Combined in to one long string: FevfGwnGQZkP]48+2;
+			
+			<h2>Starting position</h2>
+			If you choose a different starting position; when beginning phase 1, instead of starting at the first row in colum 1, start at row {x} in column 1. Continue as normal from this position
+		</div>
+		
+		<div>
+			<h2>Notes on grid capture</h2>
+			Add anything additional before printing out your grid (and instructions). For example, what are you using to generate the password? If it's for a website, are you using
+			"google" or "google.com" - they will generate different passwords, so jot down any additional notes that will help you remember here. It may help to write what your password for "test.com"/"test" is in the box below (and check it against the app).
+			<br />
+			<p align="center">
+				<textarea rows="10" cols="100"></textarea>
+			</p>
+		</div>
+	</body>
+	<head>
+		<!-- http://support.microsoft.com/kb/222064 -->
+		<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+		<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+		<META HTTP-EQUIV="Expires" CONTENT="-1">
+	</head>
+</html>

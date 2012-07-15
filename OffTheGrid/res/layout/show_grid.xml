@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="@drawable/background"
+    android:padding="10dp"
+    >
+
+	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:layout_width="fill_parent"
+	    android:layout_height="48dp"
+    	android:layout_marginTop="10dp"
+    	>
+	    
+	    <ImageView
+	        android:id="@+id/padlock_icon"
+	        android:layout_width="48dp"
+	        android:layout_height="fill_parent"
+	        
+	        android:layout_alignParentTop="true"
+	        android:layout_alignParentBottom="true"
+	        android:layout_marginRight="6dip"
+	        
+	        android:src="@drawable/padlock" />
+	    
+	    <TextView
+	       	android:layout_width="fill_parent"
+	    	android:layout_height="fill_parent" 
+	        android:text="Your grid"
+	        style="@android:style/TextAppearance.Large"
+	        
+	        android:layout_toRightOf="@id/padlock_icon"
+	        android:layout_alignParentBottom="true"
+	        android:layout_alignParentRight="true"
+	
+	        android:gravity="center_vertical"
+	        />
+	
+	</RelativeLayout>
+    
+    <LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="0dip"
+	    android:orientation="vertical"
+	    android:gravity="center"
+        android:layout_weight="100"
+        >
+        
+		<TextView
+		    android:layout_marginTop="10dp"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        
+	        android:gravity="left"
+	        android:text="Below is your very own unique grid. If you haven't already, you should email this to yourself, print it out and keep an offline copy in a safe place. Pinch to zoom, swipe to move"
+	        />
+		
+		<WebView
+		    android:id="@+id/wvShowGrid"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+		    android:layout_weight="9999999"
+		    android:layout_margin="10dp" 
+		    />
+	    
+		
+		<Button
+		    android:id="@+id/btnEmailGrid"
+		    android:layout_gravity="center"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:text="Email grid"
+		    />
+
+    </LinearLayout>
+
+</LinearLayout>
