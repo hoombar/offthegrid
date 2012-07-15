@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Off The Grid</string>
+    <string name="no_domain_entered">Enter text</string>
+    <string name="pick_one">Select iteration (Y square)</string>
+    <string-array name="grid_start_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+    </string-array>
+    <string-array name="select_pass_chars_max">
+        <item>12</item>
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+        <item>20</item>
+        <item>22</item>
+        <item>24</item>
+        <item>26</item>
+    </string-array>
+    <string name="email_text">
+        Attached to this email is a zip file containing your unique grid. You should only download this zip on to a trusted computer.
+        \n
+        Please note that the zip file has been encrypted (with 256bit AES) and will require the password you entered in the phone app to unlock the contents.
+        \n\n
+        It is strongly recommended that you delete this email and clear your download history after you have printed out your grid in the attached zip.
+    </string>
+</resources>

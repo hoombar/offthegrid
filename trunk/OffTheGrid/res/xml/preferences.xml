@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+                android:title="Password generation">
+                <CheckBoxPreference
+                        android:title="Padd with border chars"
+                        android:defaultValue="false"
+                        android:summary="When you pad with border characters, the border characters are kept when you travel each direction to build the password and then tacked on to the end"
+                        android:key="KEY_PADDING_OPTION" />
+                <ListPreference
+                        android:title="Maximum characters"
+                        android:summary="Maximum number of characters for the password will exclude padding characters"
+                        android:key="KEY_MAX_CHARACTERS"
+                        android:defaultValue="12"
+                        android:entries="@array/select_pass_chars_max"
+                        android:entryValues="@array/select_pass_chars_max" />
+                <ListPreference
+                        android:title="Default starting square"
+                        android:summary="Changing the default starting position of the grid will result in a different password being generated for the same text. Useful if you have a password expiration."
+                        android:key="KEY_START_Y"
+                        android:defaultValue="1"
+                        android:entries="@array/grid_start_values"
+                        android:entryValues="@array/grid_start_values" />
+        </PreferenceCategory>
+</PreferenceScreen>

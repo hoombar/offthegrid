@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:background="@drawable/background"
+    >
+
+    <ImageView
+        android:id="@+id/main_in_app_title"
+        android:src="@drawable/main_in_app_title"
+        android:layout_width="fill_parent"
+        android:layout_height="0dip"
+        android:layout_weight="4"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="10dp"
+        />
+     	
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    android:orientation="vertical"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center"
+	    android:paddingBottom="20dp"
+	    >
+	
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Generated password:"
+		    android:singleLine="false"
+		    />
+		
+		<LinearLayout
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:orientation="horizontal"
+		    android:weightSum="1"
+		    
+		    android:gravity="center"
+			    android:layout_marginLeft="20dp"
+			    android:layout_marginRight="20dp"
+			    android:layout_marginTop="5dp"
+			    android:layout_marginBottom="5dp"		    >
+		    
+			<TextView
+			    android:id="@+id/txtShowPassword"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_weight="0.9999"
+			    android:layout_margin="5dp"
+			    
+			    android:gravity="center"
+			    android:layout_gravity="center"
+			    android:text="@string/no_domain_entered"
+			    android:textSize="30dp"
+			    style="@android:style/TextAppearance.Large"
+			    android:typeface="monospace"
+			    android:maxLength="50"
+			    />
+			    	
+			<LinearLayout
+			    android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+				android:layout_weight="0.00001"
+				android:layout_gravity="center_vertical"
+				android:layout_margin="5dp"
+				
+			    android:orientation="vertical" 
+			    >
+			    
+			    <Button
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:id="@+id/btnCopyPassword"
+			        android:text="Copy"
+			        
+			        />
+		    
+	   		    <Button
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:id="@+id/speak"
+			        android:text="Speak"
+			        />
+			</LinearLayout>
+			
+		</LinearLayout>
+			
+		<TextView
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:text="Enter domain/text:"
+		    android:singleLine="false"
+		    />
+		
+		<LinearLayout
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    >		    
+		
+		    <EditText
+		        android:id="@+id/txtEnterDomain"
+		        android:layout_width="match_parent"
+		        android:layout_height="match_parent"
+		        android:layout_marginBottom="5dp"
+		        android:layout_marginLeft="20dp"
+		        android:layout_marginRight="10dp"
+		        android:layout_marginTop="5dp"
+		        android:singleLine="true" 
+		        
+		        android:layout_weight="999"
+		        />
+		    
+		    <Spinner
+		        android:id="@+id/choose_iteration"
+		        android:layout_width="wrap_content"
+		        android:layout_height="match_parent"
+		        android:prompt="@string/pick_one"
+				android:layout_marginRight="20dp"
+		        android:layout_marginTop="5dp"
+		        android:layout_marginBottom="5dp"
+		        
+		        android:paddingLeft="10dp"
+		        
+		        android:layout_weight="1"
+		        />
+		    <!--  android:background="@android:drawable/btn_default" -->
+		    
+		</LinearLayout>
+		
+	    
+		    
+	</LinearLayout>
+   	    
+</LinearLayout>
