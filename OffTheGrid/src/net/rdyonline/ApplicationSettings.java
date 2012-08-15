@@ -1,19 +1,24 @@
 package net.rdyonline;
 
-import com.flurry.android.FlurryAgent;
-
+import net.rdyonline.strategy.BorderCharStrategy;
+import net.rdyonline.strategy.CompositePasswordStrategy;
+import net.rdyonline.strategy.NumericBorderCharStrategy;
+import net.rdyonline.strategy.PasswordStrategy;
+import net.rdyonline.strategy.ScanForwardStrategy;
+import net.rdyonline.strategy.SymbolicBorderCharStrategy;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import com.flurry.android.FlurryAgent;
 
 public class ApplicationSettings {
 	
 	private final String KEY_GRID = "KEY_GRID";
 	private final String KEY_START_Y = "KEY_START_Y";
-	private final String KEY_PADDING_OPTION = "KEY_PADDING_OPTION";
 	private final String KEY_MAX_CHARACTERS = "KEY_MAX_CHARACTERS";
+	private final String KEY_PASSWORD_STRATEGY = "KEY_PASSWORD_STRATEGY";
 	
-	private final boolean DEFAULT_USE_PADDING = false;
 	private final int DEFAULT_MAX_CHARACTERS = 12;
 	private final int DEFAULT_START_Y = 1;
 	
@@ -47,16 +52,7 @@ public class ApplicationSettings {
 	
 	public boolean getPaddingOption()
 	{
-		return PreferenceManager.getDefaultSharedPreferences(this.context).getBoolean(this.KEY_PADDING_OPTION, DEFAULT_USE_PADDING);
-	}
-	
-	public void logPaddingOption(boolean value)
-	{
-		if (value) {
-			FlurryAgent.logEvent(Config.FLURRY_EVENT_SETTING_PAD_ON);
-		} else {
-			FlurryAgent.logEvent(Config.FLURRY_EVENT_SETTING_PAD_OFF);
-		}
+		return getPasswordStrategyName().equals("original-padded");
 	}
 	
 	public int getMaxCharacters()
@@ -68,4 +64,40 @@ public class ApplicationSettings {
 	{
 		FlurryAgent.logEvent(String.format(Config.FLURRY_EVENT_SETTING_MAX_CHAR, new Object[] { Integer.toString(value) }));
 	}
+	
+	
+	public PasswordStrategy getPasswordStrategy()
+	{
+		String strategyName = getPasswordStrategyName();
+		PasswordStrategy strategy = null;
+		
+		if (strategyName.equals("letters-only")) {
+			strategy = new ScanForwardStrategy(2);
+		} else if (strategyName.equals("use-border-char")) {
+			strategy = new CompositePasswordStrategy()
+				.add(new ScanForwardStrategy(2))
+				.add(new BorderCharStrategy());
+		} else if (strategyName.equals("use-border-digit")) {
+			strategy = new CompositePasswordStrategy()
+				.add(new ScanForwardStrategy(2))
+				.add(new NumericBorderCharStrategy());
+		} else if (strategyName.equals("use-border-symbol")) {
+			strategy = new CompositePasswordStrategy()
+				.add(new ScanForwardStrategy(2))
+				.add(new SymbolicBorderCharStrategy());			
+		}
+		
+		return strategy;
+	}
+
+	public String getPasswordStrategyName()
+	{
+		return PreferenceManager.getDefaultSharedPreferences(context).getString(KEY_PASSWORD_STRATEGY, "original");
+	}
+	
+	public void logPasswordStrategyName(String value)
+	{
+		FlurryAgent.logEvent(String.format(Config.FLURRY_EVENT_SETTING_PASSWORD_STRATEGY, value));
+	}
+	
 }

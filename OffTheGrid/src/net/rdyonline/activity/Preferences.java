@@ -56,8 +56,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			as.logStartY(as.getStartY());
 		} else if (key.equals("KEY_MAX_CHARACTERS")) {
 			as.logMaxCharacters(as.getMaxCharacters()); // trigger flurry event
-		} else if (key.equals("KEY_PADDING_OPTION")) {
-			as.logPaddingOption(as.getPaddingOption());
+		} else if (key.equals("KEY_PASSWORD_STRATEGY")) {
+			as.logPasswordStrategyName(as.getPasswordStrategyName());
 		}
 	}
 }

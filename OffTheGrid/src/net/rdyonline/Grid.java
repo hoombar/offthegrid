@@ -4,11 +4,11 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.flurry.android.FlurryAgent;
-
-
+import net.rdyonline.strategy.PasswordStrategy;
 import android.content.Context;
 import android.graphics.Point;
+
+import com.flurry.android.FlurryAgent;
 
 /***
  * This is arguably the most important object in the program. Every operation revolves around a grid.
@@ -32,6 +32,9 @@ public class Grid {
 	// used during the algorithm for grid generation 
 	private final int ROW_ITERATION_THRESHOLD = 200;
 	private int getPossibleValuesCallCount = 0;
+	
+	// Random number generator used for generating grids.
+	private final SecureRandom randomiser = new SecureRandom();
 	
 	// the directions we can seek through the grid
 	private enum directions {
@@ -153,70 +156,83 @@ public class Grid {
 	}
 	
 	public String getPasswordFromText(Context context, String text, int numChars, int Y)
-	{
+	{		
 		ApplicationSettings settings = new ApplicationSettings(context);
-		
-		String result = "";
-		
-		// swap out the numbers dots and dashes
-		text = replaceNumberDashDot(text);
-		
-		// work out the starting position and the direction
-		determineStartPosition(text, Y);
-		
-		this.currentDirection = this.getDirection(0); // getNextDirection();
-		
-		char[] characters = text.toCharArray();
-		for (int i = 0; i < characters.length; i++) {
-			
-			char character = characters[i];
+		PasswordStrategy strategy = settings.getPasswordStrategy();
 
-			if (result.toLowerCase().endsWith(Character.toString(character).toLowerCase()))
-			{
-				// update the starting position of (x or y) based on the previous direction
-				directions direction = getDirection(i-1); // getPreviousDirection();
+		if (strategy != null)
+		{
+			
+			char[] key = getKeyFromString(text, numChars / 2);
+			return getPassword(key, Y, strategy);
+			
+		}
+		else
+		{
+					
+			String result = "";
+			
+			// swap out the numbers dots and dashes
+			text = replaceNumberDashDot(text);
+			
+			// work out the starting position and the direction
+			determineStartPosition(text, Y);
+			
+			this.currentDirection = this.getDirection(0); // getNextDirection();
+			
+			char[] characters = text.toCharArray();
+			for (int i = 0; i < characters.length; i++) {
 				
-				switch (direction)
+				char character = characters[i];
+	
+				if (result.toLowerCase().endsWith(Character.toString(character).toLowerCase()))
 				{
-					case right:
-						this.currentPosition.x = ((26+(this.currentPosition.x)) % 26)+1;
-						break;
-					case down:
-						this.currentPosition.y = ((26+(this.currentPosition.y)) % 26)+1;
-						break;
-					case left:
-						this.currentPosition.x = ((26+(this.currentPosition.x - 2)) % 26)+1;
-						break;
-					case up:
-						this.currentPosition.y = ((26+(this.currentPosition.y - 2)) % 26)+1;
-						break;
+					// update the starting position of (x or y) based on the previous direction
+					directions direction = getDirection(i-1); // getPreviousDirection();
+					
+					switch (direction)
+					{
+						case right:
+							this.currentPosition.x = ((26+(this.currentPosition.x)) % 26)+1;
+							break;
+						case down:
+							this.currentPosition.y = ((26+(this.currentPosition.y)) % 26)+1;
+							break;
+						case left:
+							this.currentPosition.x = ((26+(this.currentPosition.x - 2)) % 26)+1;
+							break;
+						case up:
+							this.currentPosition.y = ((26+(this.currentPosition.y - 2)) % 26)+1;
+							break;
+					}
 				}
+				
+				// never account for top row, bottom row, left most or right most
+				result += findChar(character, this.currentDirection, false);
+				this.currentDirection = this.getDirection(i+1); // getNextDirection();
 			}
 			
-			// never account for top row, bottom row, left most or right most
-			result += findChar(character, this.currentDirection, false);
-			this.currentDirection = this.getDirection(i+1); // getNextDirection();
+			// padding chars
+			String paddChars = result.replaceAll("[a-zA-Z]", "");
+			result = result.replaceAll("[^a-zA-Z]","");
+			
+			// only the first {x} characters are used
+			int end = numChars;
+			if (result.length() < numChars)
+			{
+				end = result.length();
+			}
+			
+			result = result.substring(0, end);
+			
+			if (settings.getPaddingOption())
+			{
+				result = result + paddChars;
+			}
+			
+			return result;			
 		}
 		
-		// padding chars
-		String paddChars = result.replaceAll("[a-zA-Z]", "");
-		result = result.replaceAll("[^a-zA-Z]","");
-		
-		// only the first {x} characters are used
-		int end = numChars;
-		if (result.length() < numChars)
-		{
-			end = result.length();
-		}
-		
-		result = result.substring(0, end);
-		
-		if (settings.getPaddingOption())
-		{
-			result = result + paddChars;
-		}
-		
-		return result;
 	}
 	
 	public String generateGrid(Context context)	{
@@ -230,31 +246,37 @@ public class Grid {
 		
 		methodD();
 		
+		// Populate corners with placeholder characters.
+		this.gridArray[0][0] = ' ';
+		this.gridArray[0][27] = ' ';
+		this.gridArray[27][0] = ' ';
+		this.gridArray[27][27] = ' ';
+		
 		// now worry about the padding bit
-		for (int i = 0; i < 28; i++)
+		for (int i = 1; i < 27; i++)
 		{
-			if (i == 0 || i == 27)
-			{
-				// first or last row, fill every char except the first and last
-				for (int j = 0; j < 28; j++)
-				{
-					if (j == 0 || j == 27)
-					{
-						this.gridArray[i][j] = Character.valueOf(' ');
-					}
-					else
-					{
-						// get random padding char
-						this.gridArray[i][j] = getRandomBorderCharacter();
-					}
-				}
+			char symbol, digit;
+			boolean swap;
+			
+			// first and last place on the y axes gets filled
+			if (i < 8 || i > 19) { // pick random chars for top and bottom.
+				symbol = getRandomSymbol();
+				digit = getRandomDigit();
+				swap = randomiser.nextBoolean();
+				this.gridArray[i][0] = swap ? symbol : digit;
+				this.gridArray[i][27] = swap ? digit : symbol;
+			} else if (i < 18) { // top is fixed, bottom is symbol
+				this.gridArray[i][27] = getRandomSymbol();
+			} else { // i == 18 or i == 19 -- top is fixed, bottom is digit.
+				this.gridArray[i][27] = getRandomDigit();
 			}
-			else
-			{
-				// first and last place on the y axes gets filled
-				this.gridArray[i][0] = getRandomBorderCharacter();
-				this.gridArray[i][27] = getRandomBorderCharacter();
-			}
+			
+			// first and last place on the x axes gets filled
+			symbol = getRandomSymbol();
+			digit = getRandomDigit();
+			swap = randomiser.nextBoolean();
+			this.gridArray[0][i] = swap ? symbol : digit;
+			this.gridArray[27][i] = swap ? digit : symbol;				
 		}
 		
 		// on the top row, the following are "hard coded"
@@ -287,13 +309,18 @@ public class Grid {
 		return result;
 	}
 	
-	private char getRandomBorderCharacter()
+	private char getRandomSymbol()
 	{
-		String paddingCharacters = "!\"#$%&'()*+,/:;<=>?@[\\]^{|}~0123456789";	// removed dot, dash, underscore, and back apostrophe
+		String symbols = "!\"#$%&'()*+,/:;<=>?@[\\]^{|}~";
 		
-		SecureRandom randomiser = new SecureRandom();
+		return symbols.toCharArray()[randomiser.nextInt(symbols.length())];
+	}
+	
+	private char getRandomDigit()
+	{
+		String digits = "123456890";
 		
-		return paddingCharacters.toCharArray()[randomiser.nextInt(paddingCharacters.length())];
+		return digits.toCharArray()[randomiser.nextInt(digits.length())];
 	}
 	
 	private void methodD()
@@ -677,6 +704,353 @@ public class Grid {
 	 */
 	private String getCharacterAt(Point position)
 	{
-		return Character.toString(this.gridArray[position.x][position.y]);
+		return Character.toString(charAt(position));
 	}
+	
+	/**
+	 * Returns the character at a given position in the array.
+	 * @param position The <code>Point</code> indicating the position within
+	 *   the grid.
+	 * @return The character at the specified position.
+	 */
+	public char charAt(Point position)
+	{
+		return this.gridArray[position.x][position.y];
+	}
+	
+	/**
+	 * Determines if the specified point is within the Latin Square portion of
+	 * the grid (i.e., on the grid, but not on the border).
+	 * @param p The <code>Point</code> to test.
+	 * @return A value indicating whether the <code>position</code> is on the
+	 *   Latin Square.
+	 */
+	private boolean isInLatinSquare(Point p)
+	{
+		return 1 <= p.x && p.x <= 26 &&
+			   1 <= p.y && p.y <= 26;
+	}
+
+	/**
+	 * Finds the position of the specified character within the Latin Square
+	 * portion of the grid, scanning from the specified start position and
+	 * jumping by the specified offset until the edge of the grid is reached.
+	 * The start point itself is considered in the search.
+	 * @param c The character to look for.
+	 * @param start The <code>Point</code> at which to begin searching.
+	 * @param dx The step-size in the horizontal direction.
+	 * @param dy The step-size in the vertical direction.
+	 * @return The <code>Point</code> at which the specified character is found,
+	 *   or <code>null</code> if the edge of the grid is reached before the
+	 *   specified character could be found.
+	 */
+	private Point find(char c, Point start, int dx, int dy)
+	{
+		Point pos = new Point(start.x, start.y);
+		for (; isInLatinSquare(pos); pos.offset(dx, dy))
+		{
+			if (Util.equalsCaseInsensitive(charAt(pos), c))
+			{
+				return pos;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Finds the position of the specified character within a row.
+	 * @param c The character to look for.
+	 * @param row The index of the row to search.
+	 * @return The <code>Point</code> at which the specified character is found.
+	 */
+	private Point findInRow(char c, int row)
+	{
+		return find(c, new Point(1, row), 1, 0);
+	}
+	
+	/**
+	 * Finds the position of the specified character within a column.
+	 * @param c The character to look for.
+	 * @param col The index of the column in which to search.
+	 * @return The <code>Point</code> at which the specified character is found.
+	 */
+	private Point findInCol(char c, int col)
+	{
+		return find(c, new Point(col, 1), 0, 1);
+	}
+	
+	/**
+	 * Finds the position of the specified character within the row or column
+	 * containing the specified start position.
+	 * @param c The character to look for.
+	 * @param start The <code>Point</code> indicating the row or column to
+	 *   search.
+	 * @param dir A value indicating whether to search the row (true) or column
+	 *   (false) containing <code>start</code>. 
+	 * @return The <code>Point</code> in the same row or column as
+	 *   <code>start</code> at which the character <code>c</code> may be found.
+	 */
+	private Point findInRowOrCol(char c, Point start, boolean dir)
+	{
+		return dir ? findInRow(c, start.y) : findInCol(c, start.x);
+	}
+	
+	/**
+	 * Gets the direction required to travel from one <code>Point</code> to
+	 * another.
+	 * @param start The <code>Point</code> to start from.
+	 * @param target The <code>Point</code> to travel to.
+	 * @return The <code>Point</code> indicating the direction of travel
+	 *   required to find <code>target</code> starting from <code>start</code>.
+	 *   This will have the form <code>Point(x, y)</code> where <code>x</code>
+	 *   and <code>y</code> are both in <code>{-1, 0, 1}</code>.
+	 */
+	private Point getStepDirection(Point start, Point target)
+	{
+		return new Point(
+				Util.sign(target.x - start.x),
+				Util.sign(target.y - start.y));
+	}
+	
+	/**
+	 * Offset a given <code>Point</code> by a specified amount, wrapping within
+	 * the Latin Square portion of the grid as necessary.
+	 * @param p The <code>Point</code> to move.
+	 * @param offset The <code>Point</code> indicating how much to move by.
+	 */
+	public void offsetWrapped(Point p, Point offset)
+	{
+		int x = p.x + offset.x;
+		int y = p.y + offset.y;
+		while (x < 1) x += 26;
+		while (y < 1) y += 26;
+		while (x > 26) x -= 26;
+		while (y > 26) y -= 26;
+		p.set(x, y);
+	}
+	
+	/**
+	 * Gets the position of the border character found by traveling from a
+	 * given <code>Point</code> in a given direction.
+	 * @param p The <code>Point</code> to start from.
+	 * @param step The <code>Point</code> indicating the direction in which to
+	 *   travel.  This <code>Point</code> must have exactly one non-zero
+	 *   component.
+	 * @return The <code>Point</code> on the border found by traveling from
+	 *   <code>p</code> in the direction indicated by <code>step</code>.
+	 * @throws IllegalArgumentException if <code>step == Point(0, 0)</code> or
+	 *   <code>step</code> has two non-zero components.
+	 */
+	private Point findBorderPosition(Point p, Point step)
+	{
+		if ((step.x == 0 && step.y == 0) || (step.x != 0 && step.y != 0))
+		{
+			throw new IllegalArgumentException("step must have exactly one non-zero component.");
+		}
+		
+		if (step.x < 0)
+			return new Point(0, p.y);
+		else if (step.x > 0)
+			return new Point(27, p.y);
+		else if (step.y < 0)
+			return new Point(p.x, 0);
+		else // step.y > 0
+			return new Point(p.x, 27);
+	}
+	
+	/**
+	 * Gets the border character found by traveling from a given
+	 * <code>Point</code> in a given direction.
+	 * @param p The <code>Point</code> to start from.
+	 * @param step The <code>Point</code> indicating the direction in which to
+	 *   travel.  This <code>Point</code> must have exactly one non-zero
+	 *   component.
+	 * @return The character on the border found by traveling from
+	 *   <code>p</code> in the direction indicated by <code>step</code>.
+	 * @throws IllegalArgumentException if <code>step == Point(0, 0)</code> or
+	 *   <code>step</code> has two non-zero components.
+	 */
+	public char getBorderChar(Point p, Point step)
+	{
+		return charAt(findBorderPosition(p, step));
+	}
+	
+	/**
+	 * Gets the border character in the same row or column (as indicated by the
+	 * specified direction of travel) that is either a digit or symbol (as
+	 * specified).
+	 * @param p The <code>Point</code> indicating the row or column in which to
+	 *   search.
+	 * @param step The <code>Point</code> indicating the direction of travel.
+	 *   This <code>Point</code> must have exactly one non-zero component.
+	 * @param digit A value indicating whether to get the digit (true) or
+	 *   symbolic (false) border character.
+	 * @return
+	 *   <ul>
+	 *     <li>If <code>step.x != 0 && digit == true</code>, the digit in the
+	 *       same row as <code>p</code> is returned.</li>
+	 *     <li>If <code>step.y != 0 && digit == true</code>, the digit in the
+	 *       same column as <code>p</code> is returned.</li>
+	 *     <li>If <code>step.x != 0 && digit == false</code>, the symbol in the
+	 *       same row as <code>p</code> is returned.</li>
+	 *     <li>If <code>step.y != 0 && digit == false</code>, the symbol in the
+	 *       same column as <code>p</code> is returned.</li>
+	 *   </ul>
+	 * @throws IllegalArgumentException if <code>step == Point(0, 0)</code> or
+	 *   <code>step</code> has two non-zero components.
+	 */
+	public char getTypedBorderChar(Point p, Point step, boolean digit)
+	{
+		char c = getBorderChar(p, step);
+		if (Character.isDigit(c) != digit)
+		{
+			c = getBorderChar(p, new Point(-step.x, -step.y));
+		}
+		return c;
+	}
+	
+	/**
+	 * Finds the position at which to start extracting the password.  This is
+	 * determined by alternately scanning horizontally then vertically for each
+	 * character in the provided key, using the algorithm described at
+	 * <a href="https://www.grc.com/otg/operation.htm">grc.com</a>.
+	 * @param key The array of characters used to obtain the password.  The
+	 *   array must consist of letters only (any processing to convert other
+	 *   characters to letters must be done prior to calling this method).
+	 * @param row The index of the row from which to begin. 
+	 * @return The <code>Point</code> at which to begin scanning for password
+	 *   characters.
+	 */
+	private Point findSeedPosition(char[] key, int row)
+	{
+		Point pos = new Point(0, row);
+		Point step = new Point(0, 1);
+		boolean dir = true;
+		for (char c : key)
+		{
+			// If the character is at the current position, take one more step
+			// the direction we had been traveling previously.
+			if (Util.equalsCaseInsensitive(charAt(pos), c))
+			{
+				offsetWrapped(pos, step);
+			}
+			
+			Point next = findInRowOrCol(c, pos, dir);
+			step = getStepDirection(pos, next);
+			pos = next;
+			dir = !dir;
+		}
+		
+		// If we end up on a square that is the first character of the key, then
+		// take one more step so that we don't start on that square for the
+		// password phase.
+		if (Util.equalsCaseInsensitive(charAt(pos), key[0]))
+		{
+			offsetWrapped(pos, step);
+		}
+		return pos;
+	}
+
+	/**
+	 * Extracts the password from the grid starting from the specified point.
+	 * @param key The array of characters used to obtain the password.  The
+	 *   array must consist of letters only (any processing to convert other
+	 *   characters to letters must be done prior to calling this method).
+	 * @param start The <code>Point</code> at which to start extracting the
+	 *   password.
+	 * @param strategy The <code>PasswordStrategy</code> to use to extract
+	 *   password characters and move the cursor after finding the next key
+	 *   character.
+	 * @return The extracted password.
+	 * @throws IllegalArgumentException If the character at the start point is
+	 *   equal to <code>key[0]</code> (because if this is the case, we don't
+	 *   know whether we should go left or right to extract the first set of
+	 *   password characters).
+	 */
+	private String getPasswordFrom(char[] key, Point start, PasswordStrategy strategy)
+	{
+		// Check that we are not starting at a position containing the first key
+		// character.
+		if (charAt(start) == key[0])
+		{
+			throw new IllegalArgumentException("Cannot start on the first character of the key.");
+		}
+
+		// Initialization
+		Point pos = new Point(start.x, start.y);
+		Point step = new Point(0, 0);
+		StringBuilder password = new StringBuilder();
+		boolean dir = true;
+		
+		for (char c : key)
+		{
+			// If the last step left us on a grid position containing the next
+			// key character, then take one more step in the last direction of
+			// travel.
+			if (Util.equalsCaseInsensitive(charAt(pos), c))
+			{
+				offsetWrapped(pos, step);
+			}
+			
+			// Find the next key character in the current row or column.
+			Point next = findInRowOrCol(c, pos, dir);
+			
+			// Determine whether we are going up, down, left, or right to get to
+			// that character.
+			step = getStepDirection(pos, next);
+			
+			// Use the provided strategy to gather the password characters and
+			// move the cursor to the starting position for the next round.
+			strategy.apply(this, next, step, password);
+			
+			pos = next;		// Update current position.
+			dir = !dir;		// Switch directions (row <-> col).
+		}
+		
+		return password.toString();
+	}
+	
+	/**
+	 * Extracts the password from the grid starting from the specified row.
+	 * @param key The array of characters used to obtain the password.  The
+	 *   array must consist of letters only (any processing to convert other
+	 *   characters to letters must be done prior to calling this method).
+	 * @param row The index of the row from which to begin. 
+	 * @param strategy The <code>PasswordStrategy</code> to use to extract
+	 *   password characters and move the cursor after finding the next key
+	 *   character.
+	 * @return The extracted password.
+	 */
+	private String getPassword(char[] key, int row, PasswordStrategy strategy)
+	{
+		Point start = findSeedPosition(key, row);
+		return getPasswordFrom(key, start, strategy);
+	}
+	
+	/**
+	 * Gets the key to use based on the provided string.
+	 * @param s The string to use to generate the key.
+	 * @param length The length of the key.
+	 * @return An array of characters, with non-alphabetic characters mapped to
+	 *   alphabetic characters as described at
+	 *   <a href="https://www.grc.com/otg/operation.htm">grc.com</a>.  If
+	 *   <code>s.length() &lt; length</code>, it will first be padded with
+	 *   dashes.  This is not specified at grc.com, but is an arbitrary choice.
+	 *   The official algorithm uses <code>length == 6</code> and expects that
+	 *   the string (a URL) will always be at least this long.  If
+	 *   <code>s.length() &gt; length</code>, the first <code>length</code>
+	 *   characters are used to determine the key.
+	 */
+	private char[] getKeyFromString(String s, int length)
+	{
+		StringBuilder keyStr = new StringBuilder(s);
+		for (int i = 0, n = length - s.length(); i < n; i++)
+		{
+			keyStr.append('-');
+		}
+		
+		return replaceNumberDashDot(
+				keyStr.substring(0, length)).toCharArray();
+	}
+	
 }
