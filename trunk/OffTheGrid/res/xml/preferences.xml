@@ -2,11 +2,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
         <PreferenceCategory
                 android:title="Password generation">
-                <CheckBoxPreference
-                        android:title="Padd with border chars"
-                        android:defaultValue="false"
-                        android:summary="When you pad with border characters, the border characters are kept when you travel each direction to build the password and then tacked on to the end"
-                        android:key="KEY_PADDING_OPTION" />
+                <ListPreference
+                        android:title="Password generation strategy"
+                        android:summary="Technique for selecting password characters from the grid"
+                        android:key="KEY_PASSWORD_STRATEGY"
+                        android:defaultValue="use-border-char"
+                        android:entries="@array/select_password_strategy_name"
+                        android:entryValues="@array/select_password_strategy" />
                 <ListPreference
                         android:title="Maximum characters"
                         android:summary="Maximum number of characters for the password will exclude padding characters"

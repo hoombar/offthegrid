@@ -13,10 +13,9 @@ public class Config {
 	public static final	String FLURRY_EVENT_GRID_EMAILED = "Grid emailed";
 	public static final	String FLURRY_EVENT_GRID_VIEWED = "Grid viewed";
 	
-	public static final	String FLURRY_EVENT_SETTING_PAD_OFF = "Padding turned off";
-	public static final	String FLURRY_EVENT_SETTING_PAD_ON = "Padding turned on";
 	public static final	String FLURRY_EVENT_SETTING_MAX_CHAR = "Max char set to %s";
 	public static final	String FLURRY_EVENT_SETTING_START_SQUARE = "Start square set to %s";
+	public static final	String FLURRY_EVENT_SETTING_PASSWORD_STRATEGY = "Password strategy set to %s";
 	
 	public static final	String FLURRY_EVENT_PASSWORD_GEN = "Password shown";
 	public static final	String FLURRY_EVENT_PASSWORD_COPIED = "Password copied";

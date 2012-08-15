@@ -41,6 +41,22 @@
         <item>24</item>
         <item>26</item>
     </string-array>
+    <string-array name="select_password_strategy">
+        <item>letters-only</item>
+        <item>use-border-char</item>
+        <item>use-border-digit</item>
+        <item>use-border-symbol</item>
+        <item>original</item>
+        <item>original-padded</item>
+    </string-array>
+    <string-array name="select_password_strategy_name">
+        <item>Letters Only</item>
+        <item>Use Border Character</item>
+        <item>Use Border Digit</item>
+        <item>Use Border Symbol</item>
+        <item>Original</item>
+        <item>Original (Padded)</item>
+    </string-array>
     <string name="email_text">
         Attached to this email is a zip file containing your unique grid. You should only download this zip on to a trusted computer.
         \n
