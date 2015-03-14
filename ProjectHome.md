@@ -1,0 +1,1 @@
+An Android app created as a tribute to the work done by GRC on password generation using latin squares.
